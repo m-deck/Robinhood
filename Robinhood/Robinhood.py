@@ -1,12 +1,12 @@
 """Robinhood.py: a collection of utilities for working with Robinhood's Private API """
 
-#Standard libraries
+# Standard libraries
 import logging
 import warnings
 
 from enum import Enum
 
-#External dependencies
+# External dependencies
 from six.moves.urllib.parse import unquote  # pylint: disable=E0401
 from six.moves.urllib.request import getproxies  # pylint: disable=E0401
 from six.moves import input
@@ -16,7 +16,7 @@ import requests
 import six
 import dateutil
 
-#Application-specific imports
+# Application-specific imports
 from . import exceptions as RH_exception
 from . import endpoints
 
@@ -127,7 +127,6 @@ class Robinhood:
 
         return False
 
-
     def logout(self):
         """Logout from Robinhood
 
@@ -161,7 +160,6 @@ class Robinhood:
 
         return data
 
-
     def instruments(self, stock):
         """Fetch instruments endpoint
 
@@ -182,7 +180,6 @@ class Robinhood:
 
         return res['results']
 
-
     def instrument(self, id):
         """Fetch instrument info
 
@@ -202,7 +199,6 @@ class Robinhood:
             raise RH_exception.InvalidInstrumentId()
 
         return data
-
 
     def quote_data(self, stock=''):
         """Fetch stock quote
@@ -232,7 +228,6 @@ class Robinhood:
 
         return data
 
-
     # We will keep for compatibility until next major release
     def quotes_data(self, stocks):
         """Fetch quote for multiple stocks, in one single Robinhood API call
@@ -254,9 +249,7 @@ class Robinhood:
         except requests.exceptions.HTTPError:
             raise RH_exception.InvalidTickerSymbol()
 
-
         return data["results"]
-
 
     def get_quote_list(self,
                        stock='',
@@ -274,7 +267,7 @@ class Robinhood:
 
         """
 
-        #Creates a tuple containing the information we want to retrieve
+        # Creates a tuple containing the information we want to retrieve
         def append_stock(stock):
             keys = key.split(',')
             myStr = ''
@@ -283,8 +276,7 @@ class Robinhood:
 
             return (myStr.split(','))
 
-
-        #Prompt for stock if not entered
+        # Prompt for stock if not entered
         if not stock:   # pragma: no cover
             stock = input("Symbol: ")
 
@@ -302,7 +294,6 @@ class Robinhood:
             res.append(append_stock(data))
 
         return res
-
 
     def get_quote(self, stock=''):
         """Wrapper for quote_data """
@@ -344,7 +335,6 @@ class Robinhood:
         res = self.session.get(endpoints.historicals(), params=params, timeout=15)
         return res.json()
 
-
     def get_news(self, stock):
         """Fetch news endpoint
             Args:
@@ -355,7 +345,6 @@ class Robinhood:
         """
 
         return self.session.get(endpoints.news(stock.upper()), timeout=15).json()
-
 
     def print_quote(self, stock=''):    # pragma: no cover
         """Print quote information
@@ -371,7 +360,6 @@ class Robinhood:
             quote_str = item[0] + ": $" + item[1]
             print(quote_str)
             self.logger.info(quote_str)
-
 
     def print_quotes(self, stocks):  # pragma: no cover
         """Print a collection of stocks
@@ -389,7 +377,6 @@ class Robinhood:
         for stock in stocks:
             self.print_quote(stock)
 
-
     def ask_price(self, stock=''):
         """Get asking price for a stock
 
@@ -404,7 +391,6 @@ class Robinhood:
         """
 
         return self.get_quote_list(stock, 'ask_price')
-
 
     def ask_size(self, stock=''):
         """Get ask size for a stock
@@ -421,7 +407,6 @@ class Robinhood:
 
         return self.get_quote_list(stock, 'ask_size')
 
-
     def bid_price(self, stock=''):
         """Get bid price for a stock
 
@@ -436,7 +421,6 @@ class Robinhood:
         """
 
         return self.get_quote_list(stock, 'bid_price')
-
 
     def bid_size(self, stock=''):
         """Get bid size for a stock
@@ -453,7 +437,6 @@ class Robinhood:
 
         return self.get_quote_list(stock, 'bid_size')
 
-
     def last_trade_price(self, stock=''):
         """Get last trade price for a stock
 
@@ -468,7 +451,6 @@ class Robinhood:
         """
 
         return self.get_quote_list(stock, 'last_trade_price')
-
 
     def previous_close(self, stock=''):
         """Get previous closing price for a stock
@@ -485,7 +467,6 @@ class Robinhood:
 
         return self.get_quote_list(stock, 'previous_close')
 
-
     def previous_close_date(self, stock=''):
         """Get previous closing date for a stock
 
@@ -500,7 +481,6 @@ class Robinhood:
         """
 
         return self.get_quote_list(stock, 'previous_close_date')
-
 
     def adjusted_previous_close(self, stock=''):
         """Get adjusted previous closing price for a stock
@@ -517,7 +497,6 @@ class Robinhood:
 
         return self.get_quote_list(stock, 'adjusted_previous_close')
 
-
     def symbol(self, stock=''):
         """Get symbol for a stock
 
@@ -532,7 +511,6 @@ class Robinhood:
         """
 
         return self.get_quote_list(stock, 'symbol')
-
 
     def last_updated_at(self, stock=''):
         """Get last update datetime
@@ -549,7 +527,6 @@ class Robinhood:
 
         return self.get_quote_list(stock, 'last_updated_at')
 
-
     def last_updated_at_datetime(self, stock=''):
         """Get last updated datetime
 
@@ -565,7 +542,7 @@ class Robinhood:
 
         """
 
-        #Will be in format: 'YYYY-MM-ddTHH:mm:ss:000Z'
+        # Will be in format: 'YYYY-MM-ddTHH:mm:ss:000Z'
         datetime_string = self.last_updated_at(stock)
         result = dateutil.parser.parse(datetime_string)
 
@@ -583,7 +560,6 @@ class Robinhood:
         res = res.json()
 
         return res['results'][0]
-
 
     def get_url(self, url):
         """
@@ -673,13 +649,13 @@ class Robinhood:
                 (:obj:`dict`): contents of `fundamentals` endpoint
         """
 
-        #Prompt for stock if not entered
+        # Prompt for stock if not entered
         if not stock:   # pragma: no cover
             stock = input("Symbol: ")
 
         url = str(endpoints.fundamentals(str(stock.upper())))
 
-        #Check for validity of symbol
+        # Check for validity of symbol
         try:
             req = requests.get(url, timeout=15)
             req.raise_for_status()
@@ -689,7 +665,6 @@ class Robinhood:
 
 
         return data
-
 
     def fundamentals(self, stock=''):
         """Wrapper for get_fundamentlals function """
@@ -720,7 +695,6 @@ class Robinhood:
 
         return float(self.portfolios()['adjusted_equity_previous_close'])
 
-
     def equity(self):
         """Wrapper for portfolios
 
@@ -729,7 +703,6 @@ class Robinhood:
         """
 
         return float(self.portfolios()['equity'])
-
 
     def equity_previous_close(self):
         """Wrapper for portfolios

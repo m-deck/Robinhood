@@ -4,6 +4,7 @@ import shelve
 
 from Robinhood import Robinhood
 
+
 def get_symbol_from_instrument_url(rb_client, url, db):
     instrument = {}
     if url in db:

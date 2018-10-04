@@ -18,6 +18,7 @@ TEST = [
     'flaky~=3.3.0'
 ]
 
+
 def get_requirements(test_or_prod=False):
     """cover py2/3 stdlib extensions
 
@@ -29,7 +30,7 @@ def get_requirements(test_or_prod=False):
 
     """
     requires_list = []
-    if test_or_prod: #TEST
+    if test_or_prod: # TEST
         requires_list = TEST
         if sys.version_info.major < 3:
             requires_list.append('configparser~=3.5.0')
@@ -39,6 +40,7 @@ def get_requirements(test_or_prod=False):
             requires_list.append('enum~=0.4.6')
 
     return requires_list
+
 
 def include_all_subfiles(*args):
     """Slurps up all files in a directory (non recursive) for data_files section
@@ -64,6 +66,7 @@ def include_all_subfiles(*args):
 
     return file_list
 
+
 class PyTest(TestCommand):
     """PyTest cmdclass hook for test-at-buildtime functionality
 
@@ -78,19 +81,20 @@ class PyTest(TestCommand):
             'Tests',
             '--cov=Robinhood/',
             '--cov-report=term-missing'
-        ]    #load defaults here
+        ]    # load defaults here
 
     def run_tests(self):
         import shlex
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         pytest_commands = []
-        try:    #read commandline
+        try:    # read commandline
             pytest_commands = shlex.split(self.pytest_args)
-        except AttributeError:  #use defaults
+        except AttributeError:  # use defaults
             pytest_commands = self.pytest_args
         errno = pytest.main(pytest_commands)
         exit(errno)
+
 
 setup(
     name='Robinhood',
